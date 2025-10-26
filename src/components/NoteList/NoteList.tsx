@@ -1,5 +1,5 @@
-import { useDeleteNote } from '../../services/notesService';
-import type Note from '../../types/notes'
+import { useDeleteNote } from '../../services/noteService';
+import type Note from '../../types/note'
 import css from './NoteList.module.css'
 
 interface NoteListProps {

@@ -1,7 +1,7 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik';
-import { useAddNote } from '../../services/notesService';
+import { useAddNote } from '../../services/noteService';
 import css from './NoteForm.module.css'
-import type { NewNote } from '../../types/notes';
+import type { NewNote } from '../../types/note';
 import * as Yup from "yup";
 
 interface NoteFormProps {

@@ -1,7 +1,7 @@
 import Axios from "axios";
-import type Note from "../types/notes";
+import type Note from "../types/note";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { NewNote } from "../types/notes";
+import type { NewNote } from "../types/note";
 
 
 interface NotesHttpResponse {

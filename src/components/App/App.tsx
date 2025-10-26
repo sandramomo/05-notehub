@@ -3,7 +3,7 @@ import {  useState, type MouseEventHandler } from 'react';
 import SearchBox from '../SearchBox/SearchBox'
 import css from './App.module.css'
 import { useQuery } from '@tanstack/react-query';
-import { getNotesByQuery} from '../../services/notesService';
+import { getNotesByQuery} from '../../services/noteService';
 import Loader from '../Loader/Loader';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import NoteList from '../NoteList/NoteList';
