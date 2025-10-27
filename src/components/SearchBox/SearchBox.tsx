@@ -3,11 +3,11 @@ import css from './SearchBox.module.css'
 
 
 
-interface QuerySearchProps {
+interface SearchBoxProps {
     onSearch: (query: string) => void;
 }
 
-export default function SearchBox({onSearch}:QuerySearchProps) {
+export default function SearchBox({onSearch}:SearchBoxProps) {
 
 const [query, setQuery] = useState("");
   

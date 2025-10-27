@@ -1,62 +1,71 @@
-import { ErrorMessage, Field, Form, Formik } from 'formik';
-import { useAddNote } from '../../services/noteService';
-import css from './NoteForm.module.css'
-import type { NewNote } from '../../types/note';
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { addNote } from "../../services/noteService";
+import css from "./NoteForm.module.css";
 import * as Yup from "yup";
 
 interface NoteFormProps {
-  handleCancelNote: () => void,
-  queryKey:  [string, string, number]
+  handleCancelNote: () => void;
+  queryKey: [string, string, number];
 }
 
+interface FormValues {
+  title: string;
+  content: string;
+  tag: "Todo" | "Work" | "Personal" | "Meeting" | "Shopping";
+}
 
 const Schema = Yup.object().shape({
-  title: Yup.string().required("Title is required").min(3, "Title must be at least 3 characters")
+  title: Yup.string()
+    .required("Title is required")
+    .min(3, "Title must be at least 3 characters")
     .max(50, "Title is too long"),
-  tag:  Yup.string().required("Tag is required")
+  content: Yup.string()
+    .required("Content is required")
+    .min(5, "Content must be at least 5 characters"),
+  tag: Yup.string()
+    .required("Tag is required")
+    .oneOf(["Todo", "Work", "Personal", "Meeting", "Shopping"], "Invalid tag value"),
 });
 
 export default function NoteForm({ handleCancelNote, queryKey }: NoteFormProps) {
+  const queryClient = useQueryClient();
 
+  const { mutate, isPending } = useMutation({
+    mutationFn: addNote,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey });
+      handleCancelNote();
+    },
+    onError: (error) => {
+      console.error("Error adding note:", error);
+    },
+  });
 
-const { addNote, isPending } = useAddNote(queryKey);
-
-
- const handleSubmit = (values: NewNote) => {
-    addNote(values); 
-  };
-
-    const initialValues: NewNote = {
+  const initialValues: FormValues = {
     title: "",
     content: "",
     tag: "Todo",
   };
 
+  const handleSubmit = async (values: FormValues) => {
+    await mutate(values);
+  };
+
   return (
-    
-      <Formik initialValues={initialValues} onSubmit={handleSubmit}  validationSchema={Schema}>
-      {() =>  (
+    <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={Schema}>
+      {() => (
         <Form className={css.form}>
           <div className={css.formGroup}>
             <label htmlFor="title">Title</label>
-            <Field
-              id="title"
-              name="title"
-              type="text"
-              className={css.input}
-            />
-             <ErrorMessage name="title" component="div" className={css.error} />
+            <Field id="title" name="title" type="text" className={css.input} />
+            <ErrorMessage name="title" component="div" className={css.error} />
           </div>
 
           <div className={css.formGroup}>
             <label htmlFor="content">Content</label>
-            <Field
-              as="textarea"
-              id="content"
-              name="content"
-              rows={8}
-              className={css.textarea}
-            />
+            <Field as="textarea" id="content" name="content" rows={8} className={css.textarea} />
+            <ErrorMessage name="content" component="div" className={css.error} />
           </div>
 
           <div className={css.formGroup}>
@@ -67,8 +76,8 @@ const { addNote, isPending } = useAddNote(queryKey);
               <option value="Personal">Personal</option>
               <option value="Meeting">Meeting</option>
               <option value="Shopping">Shopping</option>
-                <ErrorMessage name="tag" component="div" className={css.error} />
             </Field>
+            <ErrorMessage name="tag" component="div" className={css.error} />
           </div>
 
           <div className={css.actions}>
@@ -82,5 +91,5 @@ const { addNote, isPending } = useAddNote(queryKey);
         </Form>
       )}
     </Formik>
-)
+  );
 }
