@@ -30,9 +30,9 @@ export async function getNotesByQuery(search: string, page: number): Promise<Not
 }
 
 export function addNote(newNote: NewNote): Promise<Note> {
-  return axios.post("/notes", newNote).then(res => res.data);
+  return axios.post<Note>("/notes", newNote).then(res => res.data);
 }
 
-export function deleteNote(id: string): Promise<void> {
-  return axios.delete(`/notes/${id}`).then(res => res.data);
+export function deleteNote(id: string): Promise<Note> {
+  return axios.delete<Note>(`/notes/${id}`).then(res => res.data);
 }

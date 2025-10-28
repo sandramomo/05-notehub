@@ -21,8 +21,7 @@ const Schema = Yup.object().shape({
     .min(3, "Title must be at least 3 characters")
     .max(50, "Title is too long"),
   content: Yup.string()
-    .required("Content is required")
-    .min(5, "Content must be at least 5 characters"),
+    .max(500, "Content is too long"),
   tag: Yup.string()
     .required("Tag is required")
     .oneOf(["Todo", "Work", "Personal", "Meeting", "Shopping"], "Invalid tag value"),
